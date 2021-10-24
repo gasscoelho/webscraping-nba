@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  chrome:
+    image: selenium/standalone-chrome:3.141.59
+    container_name: selenium
+    shm_size: 2gb
+    ports:
+      - "4444:4444"
+
+  app:
+    container_name: webscraping
+    build: .
+    image: gasscoelho/webscraping:v1.0.0
+    volumes:
+      - ./:/usr/app
+    depends_on:
+      - "chrome"
+    command: sh -c "/wait && python webscraping.py"
+    environment:
+        WAIT_HOSTS: chrome:4444
+      
